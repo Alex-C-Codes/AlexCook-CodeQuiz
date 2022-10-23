@@ -52,11 +52,16 @@ var myQuestions = [
     }
 ]
 
+// [x] When timerCount =< 0, game ends
+// [x] When last question, game ends
+// [ ] make game pretty
+// [ ] WHEN the game is over THEN I can save my initials and my score
+
 // Button variables
 var startButton = document.querySelector(".start-button");
 
 // Timer variables
-var timerEl = document.getElementById("timer-count");
+var timerContainer = document.getElementById("timer");
 var timer;
 var timerCount;
 
@@ -68,21 +73,24 @@ var quizOn = false;
 var output = [];
 var answersList;
 var questionIndex = -1;
+var answerContainers;
 
 // Results variables
 var resultsContainer = document.getElementById('results');
 var numCorrect = 0;
 var resultsOutput = '';
 
+// Game Over Variables
+var gameOverContainer = document.getElementById('gameOverScreen');
+var initials;
+
 // Timer function
 function startTimer() {
     timer = setInterval(function(){
         timerCount--;
-        document.getElementById("timeRemaining").innerHTML = timerCount;
+        timerContainer.innerHTML = '<div>Time Remaining: ' + timerCount + '</div>';
         if (timerCount === 0) {
             clearInterval(timer);
-            return;
-            quizOn = false;
         }
     }, 1000);
 }
@@ -94,40 +102,106 @@ function givePrompts() {
     answersList = [];
     output = [];
 
-    for (letter in myQuestions[questionIndex].answers) {
-        // fills answers list array with multiple choice ansswers
-        answersList.push(
-            '<label>'
-                + '<input type="radio" name="question'+questionIndex+'" value="'+myQuestions[questionIndex].answers[letter]+'"onclick=""'+'>'
-                + letter + ': '
-                + myQuestions[questionIndex].answers[letter]
-                +'<br>'
-            + '</label>'
-            );
+    if (questionIndex < myQuestions.length) {
+
+        for (letter in myQuestions[questionIndex].answers) {
+            // fills answers list array with multiple choice ansswers
+            answersList.push(
+                '<label>'
+                    + '<input type="radio" name="question'+questionIndex+'" value="'+myQuestions[questionIndex].answers[letter]+'"onclick=""'+'>'
+                    + letter + ': '
+                    + myQuestions[questionIndex].answers[letter]
+                    +'<br>'
+                + '</label>'
+                );
+        }
+
+        // displays questions, answers, and submit button
+        output.push(
+            '<div class="question">' + myQuestions[questionIndex].question + '</div>'
+            + '<div id="answers" class="answers">' + answersList.join('') + '</div><br>'
+            + '<input type="button" class="submit-button" onclick="submitAnswer()" value="Submit Answer">'
+        );
+
+        //console.log(output);
+
+        quizContainer.innerHTML = output.join('');
+        resultsContainer.innerHTML = '<br>Your Score: ' + numCorrect + '<br>' + resultsOutput;
+    } else {
+        gameOver();
     }
+}
 
-    // displays questions, answers, and submit button
-    output.push(
-        '<div class="question">' + myQuestions[questionIndex].question + '</div>'
-        + '<div class="answers">' + answersList.join('') + '</div><br>'
-        + '<input type="button" class="submit-button" onclick="submitAnswer()" value="Submit Answer">'
-    );
+// [ ] WHEN the game is over THEN I can save my initials and my score
 
-    console.log(output);
+function gameOver() {
+    // reset game conditions:
+    quizContainer.innerHTML = ' ';
+    clearInterval(timer);
+    timerCount = 0;
+    timerContainer.innerHTML = '<div>Time Remaining: ' + timerCount + '</div>';
+    quizContainer.innerHTML = ' ';
+    startButton.disabled = false;
+    startButton.value = 'Start Quiz';
+    questionIndex = -1;
 
-    quizContainer.innerHTML = output.join('');
-    resultsContainer.innerHTML = '<br>Your Score: ' + numCorrect + '<br>' + resultsOutput;
+    gameOverContainer.innerHTML = '<br><label>Submit Initals: </label><input type="search" id="initialsInput"><input type="submit" onclick="handleClick()">'
+}
+
+// function submitInitials() {
+//     initials = document.getElementById('initialsInput').value;
+//     getHighScoresScreen();
+// }
+
+function submitScore(userInitials, highScore) {
+    highScoresArr.push({user: {userInitials, highScore}});
+    console.log(highScoresArr);
+}
+
+function handleClick() {
+    initials = document.getElementById('initialsInput').value;
+    submitScore(initials, numCorrect);
+    getHighScoresScreen();
+}
+
+// highScores is an array that will store high scores via the numCorrect and initials var
+var userInitials;
+var highScore;
+var highScoresArr = [];
+
+var gamesPlayed = 0;
+
+
+
+function getHighScoresScreen() {
+    ++gamesPlayed;
+    resultsContainer.innerHTML = ' ';
+    gameOverContainer.innerHTML = '<h3>High Scores</h3><p>'+initials+' - '+numCorrect+'</p><input type="button" value="Play Again" id="goBackButton" onclick=""><input type="button" value="Clear High Scores" id="clearHighScoresButton" onclick="">';
+
+    // highSchores
+    // highScoresArr.userInitials = initials;
+    // highScoresArr.highScore = numCorrect;
+    // highScoresArr.push({user: {userInitials, highScore}});
+    // //highScoresArr = highScoresArr.concat([initials, numCorrect]);
+    // console.log(highScoresArr);
+
+
+    for (let i = 0; i < highScoresArr.length; i++) {
+        console.log(highScoresArr.userInitials);
+        console.log(highScoresArr.highScore);
+    }
 }
 
 // Get Answer - gets answer from user input when user selects an answer
 function submitAnswer() {
-
-    var answerContainers = quizContainer.querySelectorAll('.answers');
+    
+    answerContainers = quizContainer.querySelectorAll('.answers');
+    //answerContainers = quizContainer.getElementById('answers');
+    //console.log(answerContainers,questionIndex);
     //userAnswer = '';
-    console.log(userAnswer);
 
-    userAnswer = (answerContainers[questionIndex].querySelector('input[name=question'+questionIndex+']:checked')||{}).value;
-    console.log(userAnswer);
+    userAnswer = (answerContainers[0].querySelector('input[name=question'+questionIndex+']:checked')||{}).value;
+    // userAnswer = (answerContainers[questionIndex].querySelector('input[name=question'+questionIndex+']:checked')||{}).value;
         
     // if answer is correct
     if(userAnswer===myQuestions[questionIndex].correctAnswer){
@@ -140,6 +214,12 @@ function submitAnswer() {
     else{
         resultsOutput = '<div>'+'Your answer is wrong :('+'<br>'+'</div>'
         givePrompts();
+        if (timerCount > 0) {
+            timerCount = timerCount - 10;
+            if (timerCount <= 0) {
+                gameOver();
+            }
+        }
     }
 }
 
@@ -165,8 +245,8 @@ function updateSubmitButton() {
 // startQuiz needs to display quesion and answers + update button + start timer
 function startQuiz() {
     updateButton();
-    timerCount = 75;
-    document.getElementById("timeRemaining").innerHTML = timerCount;
+    timerCount = 30;
+    timerContainer.innerHTML = '<div>Time Remaining: ' + timerCount + '</div>';
     startTimer();
     givePrompts();
 }
@@ -310,9 +390,9 @@ if (quizOn) {
 
 GIVEN I am taking a code quiz
 [x] WHEN I click the start button THEN a [x] timer starts and [x] I am presented with a question
-[ ] WHEN I answer a question THEN I am presented with another question
-[ ] WHEN I answer a question incorrectly THEN time is subtracted from the clock
-[ ] WHEN all questions are answered or the timer reaches 0 THEN the game is over
+[x] WHEN I answer a question THEN I am presented with another question
+[x] WHEN I answer a question incorrectly THEN time is subtracted from the clock
+[x] WHEN all questions are answered or the timer reaches 0 THEN the game is over
 [ ] WHEN the game is over THEN I can save my initials and my score
 
 PERSONAL:
