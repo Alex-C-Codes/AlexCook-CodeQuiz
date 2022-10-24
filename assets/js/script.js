@@ -28,7 +28,7 @@ var myQuestions = [
             c: 'booleans',
             d: 'all of the above'
         },
-        correctAnswer: 'all the above'
+        correctAnswer: 'all of the above'
     },
         {
         question: "The condition in an if / else statement is enclosed with ____.",
