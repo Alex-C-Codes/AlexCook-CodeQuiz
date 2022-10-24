@@ -33,22 +33,22 @@ var myQuestions = [
         {
         question: "The condition in an if / else statement is enclosed wih ____.",
         answers: {
-            a: 'a',
-            b: 'b',
-            c: 'c',
-            d: 'd'
+            a: 'quotes',
+            b: 'curly brackets',
+            c: 'parenthesis',
+            d: 'square brackets'
         },
-        correctAnswer: '...'
+        correctAnswer: 'parenthesis'
     },
     {
         question: "Commonly used data types DO Not Include:",
         answers: {
-            a: 'a',
-            b: 'b',
-            c: 'c',
-            d: 'd'
+            a: 'strings',
+            b: 'booleans',
+            c: 'alerts',
+            d: 'numbers'
         },
-        correctAnswer: '...'
+        correctAnswer: 'alerts'
     }
 ]
 
@@ -157,7 +157,7 @@ function gameOver() {
         timerCountDisplay = 0;
     }
     resultsContainer.innerHTML = '<br>Your Final Score: ' + timerCountDisplay + '<br>';
-    gameOverContainer.innerHTML = '<br><label>Submit Initals: </label><input type="search" id="initialsInput"><input type="submit" onclick="handleClick()">'
+    gameOverContainer.innerHTML = '<br><div><label>Submit Initals: </label><input type="search" id="initialsInput"></div><input type="submit" onclick="handleClick()">'
     clearInterval(timer);
     questionIndex = -1
 }
@@ -252,8 +252,10 @@ function submitAnswer() {
 function startQuiz() {
     questionIndex = -1;
     numCorrect = 0;
+    resultsOutput = ' ';
     startContainer.innerHTML = '';
     gameOverContainer.innerHTML = '';
+    resultsContainer.innerHTML
     timerCount = 75;
     timerContainer.innerHTML = '<div>Time Remaining: ' + timerCount + '</div>';
     startTimer();

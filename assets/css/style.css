@@ -42,7 +42,7 @@ header {
   font-size: 25px;
 }
 
-input[type=button], button {
+input[type=button], input[type=submit], button {
   background-color: purple;
   border: none;
   color: white;
