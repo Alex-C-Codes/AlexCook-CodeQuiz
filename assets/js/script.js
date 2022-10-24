@@ -150,13 +150,13 @@ function gameOver() {
     timerContainer.innerHTML = ' ';
     console.log('timerCount is:');
     console.log(timerCount);
-    let timerCountDisplay
-    if (timerCount > 0 ) {
-        timerCountDisplay = timerCount - 10;
-    } else {
-        timerCountDisplay = 0;
-    }
-    resultsContainer.innerHTML = '<br>Your Final Score: ' + timerCountDisplay + '<br>';
+    // let timerCountDisplay
+    // if (timerCount > 0 ) {
+    //     timerCountDisplay = timerCount - 10;
+    // } else {
+    //     timerCountDisplay = 0;
+    // }
+    resultsContainer.innerHTML = '<br>Your Final Score: ' + timerCount + '<br>';
     gameOverContainer.innerHTML = '<br><div><label>Submit Initals: </label><input type="search" id="initialsInput"></div><input type="submit" onclick="handleClick()">'
     clearInterval(timer);
     questionIndex = -1
