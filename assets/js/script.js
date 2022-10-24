@@ -101,6 +101,7 @@ function startTimer() {
         timerContainer.innerHTML = '<div>Time Remaining: ' + timerCount + '</div>';
         if (timerCount === 0) {
             clearInterval(timer);
+            timerCountDisplay = timerCount;
             gameOver();
         }
     }, 1000);
@@ -108,6 +109,7 @@ function startTimer() {
 
 // shows questions, answers, and submit button for each question
 function givePrompts() {
+    console.log('givePrompts()');
     ++questionIndex;
 
     answersList = [];
@@ -138,7 +140,37 @@ function givePrompts() {
         //resultsContainer.innerHTML = '<br>Your Score: ' + numCorrect + '<br>' + resultsOutput;
         resultsContainer.innerHTML = '<br>' + resultsOutput;
     } else {
-        console.log(timerCount);
+        questionIndex = questionIndex - 1;
+        answerContainers = quizContainer.querySelectorAll('.answers');
+
+        userAnswer = (answerContainers[0].querySelector('input[name=question'+questionIndex+']:checked')||{}).value;
+            
+        // if answer is correct
+        if(userAnswer===myQuestions[questionIndex-1].correctAnswer){
+            // add to the number of correct answers
+            numCorrect++;
+            //resultsOutput = '<div>'+'Your answer is correct!'+'<br>'+'</div>';
+            //givePrompts();
+            //gameOver();
+        }
+        // if answer is wrong or blank
+        else{
+            console.log(timerCount);
+            timerCountDisplay = timerCount;
+            if (timerCount >= 10) {
+                console.log(timerCount);
+                timerCount = timerCount - 10;
+                // if (timerCount <= 0) {
+                //     timerCount = 0;
+                //     gameOver();
+                // }
+                //gameOver();
+            } else if (timerCount <= 10) {
+                timerCount = 0;
+                //gameOver();
+            }
+        }
+        //++questionIndex;
         gameOver();
     }
 }
@@ -148,18 +180,20 @@ function gameOver() {
     startContainer.innerHTML = '';
     quizContainer.innerHTML = ' ';
     timerContainer.innerHTML = ' ';
-    console.log('timerCount is:');
-    console.log(timerCount);
+    // if (timerCount <= 0) {
+    //     timerCount = 0;
+    // }
     // let timerCountDisplay
     // if (timerCount > 0 ) {
     //     timerCountDisplay = timerCount - 10;
     // } else {
     //     timerCountDisplay = 0;
     // }
-    resultsContainer.innerHTML = '<br>Your Final Score: ' + timerCount + '<br>';
-    gameOverContainer.innerHTML = '<br><div><label>Submit Initals: </label><input type="search" id="initialsInput"></div><input type="submit" onclick="handleClick()">'
+    resultsContainer.innerHTML = '<br>Your Final Score: ' + timerCountDisplay + '<br>';
+    //timerCountDisplay = timerCount;
+    gameOverContainer.innerHTML = '<br><div><label>Submit Initals: </label><input type="search" id="initialsInput"></div><input type="submit" onclick="handleClick()">';
     clearInterval(timer);
-    questionIndex = -1
+    questionIndex = -1;
 }
 
 function submitScore(userInitials, highScore) {
@@ -169,10 +203,15 @@ function submitScore(userInitials, highScore) {
 }
 
 function handleClick() {
-    //console.log(timerCount);
-    //timerCountDisplay = timerCount + 10;
+    // console.log(timerCount);
+    // if (timerCount > 0) {
+    //     timerCountDisplay = timerCount + 10;
+    // } else {
+    //     timerCountDisplay = 0;
+    // }
+    console.log(timerCountDisplay);
     initials = document.getElementById('initialsInput').value;
-    submitScore(initials, timerCount);
+    submitScore(initials, timerCountDisplay);
     getHighScoresScreen();
 }
 
@@ -184,6 +223,8 @@ function getHighScoresScreen() {
     startContainer.innerHTML = ' ';
     resultsContainer.innerHTML = ' ';
     highScoresDisplay = '';
+
+    console.log(highScoresArr[0].highScore);
 
     // organizes highScoresArr from highest to lowest scores
     highScoresArr.sort(compare);
@@ -222,10 +263,13 @@ function updateGameOverContainer(a) {
 
 // Get Answer - gets answer from user input when user selects an answer
 function submitAnswer() {
-    
+    console.log('submitAnswers()');
     answerContainers = quizContainer.querySelectorAll('.answers');
+    //console.log(answerContainers[0]);
 
     userAnswer = (answerContainers[0].querySelector('input[name=question'+questionIndex+']:checked')||{}).value;
+
+    if (timerCount > 0 ) 
         
     // if answer is correct
     if(userAnswer===myQuestions[questionIndex].correctAnswer){
@@ -237,14 +281,24 @@ function submitAnswer() {
     // if answer is wrong or blank
     else{
         resultsOutput = '<div>'+'Your answer is wrong :('+'<br>'+'</div>'
-        givePrompts();
+        timerCount = timerCount - 10;
         if (timerCount > 0) {
-            timerCount = timerCount - 10;
-            if (timerCount <= 0) {
-                timerCount = 0;
-                gameOver();
-            }
+            givePrompts();
+        } else if (timerCount <= 0) {
+            timerCount = 0;
+            timerCountDisplay = timerCount;
+            quizContainer.innerHTML = ' ';
+            gameOver();
         }
+        // if (timerCount > 0) {
+        //     timerCount = timerCount - 10;
+        //     if (timerCount <= 0) {
+        //         timerCount = 0;
+        //         timerCountDisplay = timerCount;
+        //         gameOver();
+        //     }
+        // }
+        // givePrompts();
     }
 }
 
@@ -256,7 +310,7 @@ function startQuiz() {
     startContainer.innerHTML = '';
     gameOverContainer.innerHTML = '';
     resultsContainer.innerHTML
-    timerCount = 75;
+    timerCount = 55;
     timerContainer.innerHTML = '<div>Time Remaining: ' + timerCount + '</div>';
     startTimer();
     givePrompts();
