@@ -9,24 +9,20 @@
   <body>
     <!-- Header -->
     <header>
-      <h1>Coding Quiz</h1>
+      <h1><a href="./index.html" class="anchor-noDecorations">Coding Quiz</a></h1>
     </header>
     
-    <div>
-        <!-- Button Section -->
-        <input type="button" class="start-button" onclick="startQuiz()" value="Start Quiz" enabled/>
-
-        <!-- Timer Count Section-->
-           
-        <!-- Quiz Section-->
-        <div class="myDiv" id="startScreen"></div>
-        <div class="myDiv" id="timer"></div>
-        <div class="myDiv" id="quiz"></div>
-        <div class="myDiv" id="results"></div>
-        <div class="myDiv" id="gameOverScreen"></div>
-
+    <!-- Quiz Section-->
+    <div class="quizSection">
+        <div class="timerDiv" id="timer"></div><br>
+        <div id="startScreen"></div>
+        <div id="quiz"></div>
+        <div id="results"></div>
+        <div id="gameOverScreen"></div>
     </div>
-
+    <div style="text-align: center;">
+      <input type="button" value="Get High Scores" onclick="getHighScoresScreen()"></input>
+    </div>
     <script src="assets/js/script.js"></script>
   </body>
 </html>
