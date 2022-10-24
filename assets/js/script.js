@@ -224,7 +224,7 @@ function getHighScoresScreen() {
     resultsContainer.innerHTML = ' ';
     highScoresDisplay = '';
 
-    console.log(highScoresArr[0].highScore);
+    //console.log(highScoresArr[0].highScore);
 
     // organizes highScoresArr from highest to lowest scores
     highScoresArr.sort(compare);
