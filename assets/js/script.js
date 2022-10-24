@@ -31,14 +31,14 @@ var myQuestions = [
         correctAnswer: 'all the above'
     },
         {
-        question: "The condition in an if / else statement is enclosed wih ____.",
+        question: "The condition in an if / else statement is enclosed with ____.",
         answers: {
             a: 'quotes',
             b: 'curly brackets',
             c: 'parenthesis',
             d: 'square brackets'
         },
-        correctAnswer: 'parenthesis'
+        correctAnswer: 'curly brackets'
     },
     {
         question: "Commonly used data types DO Not Include:",
